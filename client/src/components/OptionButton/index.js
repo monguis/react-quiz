@@ -1,12 +1,12 @@
 import React from "react";
 import "./assets/styles.css";
 
-const OptionButton = ()=>{
+const OptionButton = (props) => {
     return (
         <div>
-            <a className = "buttonSprite">
-faket
-            </a>
+            <div className="buttonSprite">
+                {props.text}
+            </div>
         </div>
     )
 }

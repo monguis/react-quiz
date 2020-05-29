@@ -1,15 +1,22 @@
 import React, { Component } from "react";
-import { Container,Row,Col } from "react-bootstrap"
-import logo from "./logo.svg";
+import { Container, Row, Col } from "react-bootstrap";
 import "./App.css";
-import OptionButton from "./components/OptionButton";
+import Quiz from "./components/Quiz"
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Container>
-          <OptionButton></OptionButton>
+        <Container fluid>
+          <Row>
+            <h1>
+              Game Title
+            </h1>
+          </Row>
+          <Quiz />
+
+
+
         </Container>
       </div>
     );

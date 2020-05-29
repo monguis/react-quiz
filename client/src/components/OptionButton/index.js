@@ -2,10 +2,11 @@ import React from "react";
 import "./assets/styles.css";
 
 const OptionButton = (props) => {
+    const { handleClick, text, selected } = props
     return (
-        <div>
-            <div className="buttonSprite">
-                {props.text}
+        <div onClick={() => { handleClick(text) }}>
+            <div className={"buttonSprite " + (selected ? "selected" : "")}>
+                {text}
             </div>
         </div>
     )

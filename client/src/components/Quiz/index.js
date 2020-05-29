@@ -12,7 +12,7 @@ const Quiz = () => {
         options: []
     })
 
-    const { currentQuestion, questionText, options } = state;
+    const { userAnswer, currentQuestion, questionText, options } = state;
 
     const randomize = arr => {
         let newPos, temp;
@@ -26,6 +26,16 @@ const Quiz = () => {
     }
 
     useEffect(() => {
+
+        var storedSchedule = JSON.parse(localStorage.getItem("Todaytodo"));
+        if (!storedSchedule) {
+            console.log("naas");
+            localStorage.setItem("Todaytodo", JSON.stringify("yass"));
+        } else {
+            console.log(storedSchedule);
+        }
+
+
         randomize(questions);
     }, [])
 
@@ -47,6 +57,14 @@ const Quiz = () => {
         })
     }
 
+    const handleAnswer = (answer) => {
+        console.log(answer)
+        setState({
+            ...state,
+            userAnswer:answer
+        })
+    }
+
     return (
         questionText ?
             <>
@@ -55,12 +73,12 @@ const Quiz = () => {
                 </Row>
                 <Row>
                     <Col md={6} xs={12}>
-                        <OptionButton text={options[0]} />
-                        <OptionButton text={options[1]} />
+                        <OptionButton handleClick={handleAnswer} text={options[0]} selected={options[0] === userAnswer} />
+                        <OptionButton handleClick={handleAnswer} text={options[1]} selected={options[1] === userAnswer}/>
                     </Col>
                     <Col md={6} xs={12}>
-                        <OptionButton text={options[2]} />
-                        <OptionButton text={options[3]} />
+                        <OptionButton handleClick={handleAnswer} text={options[2]} selected={options[2] === userAnswer}/>
+                        <OptionButton handleClick={handleAnswer} text={options[3]} selected={options[3] === userAnswer}/>
                     </Col>
                 </Row>
                 <Row><button onClick={nextQuestionHandler}>answer</button></Row>

@@ -1,0 +1,145 @@
+[
+    {
+        "id": 0,
+        "question": "In what year was Sega Genesis released in North America?",
+        "options": [
+            "1989",
+            "1999",
+            "1975",
+            "1991"
+        ],
+        "answer": "1989"
+    },
+    {
+        "id": 1,
+        "question": "Which of the following video games takes place in a dystopian underwater city called Rapture ?",
+        "options": [
+            "Bioshock",
+            "Half - Life",
+            "God Of War",
+            "Fallout 3"
+        ],
+        "answer": "Bioshock"
+    },
+    {
+        "id": 2,
+        "question": "What Nintendo system was released after the N64 and before the Wii ?",
+        "options": [
+            "Gamecube",
+            "Nintendo",
+            "Virtual Boy",
+            "Super Nintendo"
+        ],
+        "answer": "Gamecube"
+    },
+    {
+        "id": 3,
+        "question": "Honda, Dhalsim and Chun Li are all characters from what video game series ?",
+        "options": [
+            "Street Fighter",
+            "Teenage Mutant Ninja Turtles",
+            "Battletoads",
+            "Mortal Kombat"
+        ],
+        "answer": "Street Fighter"
+    },
+    {
+        "id": 4,
+        "question": "What color is the ring of death on an XBOX that signifies a hardware failure ?",
+        "options": [
+            "Red",
+            "Blue",
+            "Yellow",
+            "Green"
+        ],
+        "answer": "Red"
+    },
+    {
+        "id": 5,
+        "question": "What classic beat - 'em-up game featured brothers Billy Lee and Jimmy (also nicknamed Spike and Hammer)?",
+        "options": [
+            "Double Dragon",
+            "Smash Brothers",
+            "Ninja Gaiden",
+            "Snow Brothers"
+        ],
+        "answer": "Double Dragon"
+    },
+    {
+        "id": 6,
+        "question": "What classic beat - 'em-up game featured brothers Billy Lee and Jimmy (also nicknamed Spike and Hammer)?",
+        "options": [
+            "Double Dragon",
+            "Smash Brothers",
+            "Ninja Gaiden",
+            "Snow Brothers"
+        ],
+        "answer": "Double Dragon"
+    },
+    {
+        "id": 7,
+        "question": "How many bits was the Super Nintendo Entertainment System?",
+        "options": [
+            "16",
+            "8",
+            "128",
+            "64"
+        ],
+        "answer": "16"
+    },
+    {
+        "id": 8,
+        "question": "What character do you play as in The Legend Of Zelda ?",
+        "options": [
+            "Link",
+            "Gandolf",
+            "Chimmy",
+            "Peter"
+        ],
+        "answer": "Link"
+    },
+    {
+        "id": 9,
+        "question": "What 64 - bit Sega system was a predecessor to the PlayStation and Nintendo 64 ?",
+        "options": [
+            "Saturn",
+            "Dreamcast",
+            "Commodore 128",
+            "3DO"
+        ],
+        "answer": "Saturn"
+    },
+    {
+        "id": 10,
+        "question": "The game Grand Theft Auto was released primarily for what gaming system ?",
+        "options": [
+            "PlayStation",
+            "Dreamcast",
+            "XBOX",
+            "NES"
+        ],
+        "answer": "PlayStation"
+    },
+    {
+        "id": 11,
+        "question": "Which James Bond film was made into a game for the Nintendo 64 console and later for the Wii console ?",
+        "options": [
+            "Goldeneye",
+            "Thunderball",
+            "Moonraker",
+            "Goldfinger"
+        ],
+        "answer": "Goldeneye"
+    },
+    {
+        "id": 12,
+        "question": "Which popular video game features an ex - Special Forces operator named Jack Carver, who is stranded in Micronesia ?",
+        "options": [
+            "Far Cry",
+            "Halo 2",
+            "Left 4 Dead",
+            "Max Payne"
+        ],
+        "answer": "Far Cry"
+    }
+]

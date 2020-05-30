@@ -15,6 +15,7 @@
     background-image: url("./images/green-button.png");
 }
 
-.buttonSprite:active {
+.buttonSprite.selected {
     background-image: url("./images/answer-selected.png");
 }
+

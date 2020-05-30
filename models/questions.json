@@ -7,7 +7,8 @@
             "1999",
             "1975",
             "1991"
-        ]
+        ],
+        "answer": "1989"
     },
     {
         "id": 1,
@@ -17,7 +18,8 @@
             "Half - Life",
             "God Of War",
             "Fallout 3"
-        ]
+        ],
+        "answer": "Bioshock"
     },
     {
         "id": 2,
@@ -27,7 +29,8 @@
             "Nintendo",
             "Virtual Boy",
             "Super Nintendo"
-        ]
+        ],
+        "answer": "Gamecube"
     },
     {
         "id": 3,
@@ -37,7 +40,8 @@
             "Teenage Mutant Ninja Turtles",
             "Battletoads",
             "Mortal Kombat"
-        ]
+        ],
+        "answer": "Street Fighter"
     },
     {
         "id": 4,
@@ -47,7 +51,8 @@
             "Blue",
             "Yellow",
             "Green"
-        ]
+        ],
+        "answer": "Red"
     },
     {
         "id": 5,
@@ -57,7 +62,8 @@
             "Smash Brothers",
             "Ninja Gaiden",
             "Snow Brothers"
-        ]
+        ],
+        "answer": "Double Dragon"
     },
     {
         "id": 6,
@@ -67,7 +73,8 @@
             "Smash Brothers",
             "Ninja Gaiden",
             "Snow Brothers"
-        ]
+        ],
+        "answer": "Double Dragon"
     },
     {
         "id": 7,
@@ -77,7 +84,8 @@
             "8",
             "128",
             "64"
-        ]
+        ],
+        "answer": "16"
     },
     {
         "id": 8,
@@ -87,7 +95,8 @@
             "Gandolf",
             "Chimmy",
             "Peter"
-        ]
+        ],
+        "answer": "Link"
     },
     {
         "id": 9,
@@ -97,7 +106,8 @@
             "Dreamcast",
             "Commodore 128",
             "3DO"
-        ]
+        ],
+        "answer": "Saturn"
     },
     {
         "id": 10,
@@ -107,7 +117,8 @@
             "Dreamcast",
             "XBOX",
             "NES"
-        ]
+        ],
+        "answer": "PlayStation"
     },
     {
         "id": 11,
@@ -117,7 +128,8 @@
             "Thunderball",
             "Moonraker",
             "Goldfinger"
-        ]
+        ],
+        "answer": "Goldeneye"
     },
     {
         "id": 12,
@@ -127,6 +139,7 @@
             "Halo 2",
             "Left 4 Dead",
             "Max Payne"
-        ]
+        ],
+        "answer": "Far Cry"
     }
 ]

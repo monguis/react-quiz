@@ -12,24 +12,36 @@ if (process.env.NODE_ENV === "production") {
 // Send every request to the React app
 // Define any API routes before this runs
 
-app.use(express.json())
+app.use(express.json());
+
+
 
 app.get("/api/questions/", function (req, res) {
   const questionsList = Object.values(questions);
- 
-  const noAnswer = questionsList.map(question => { 
-    delete question.answer; 
-    return question 
-  });
+
+  const noAnswer = questionsList.map(item =>
+    ({
+      id: item.id,   
+      question: item.question,
+      options: item.options
+    }));
   res.send(noAnswer);
 });
 
 
-
+ 
 app.post("/api/answer/", function (req, res) {
-  const correctAnswer = questions.find(answer => answer.id === req.body.id).answer;
 console.log(req.body)
-  res.send({ ...req.body, correct: correctAnswer.toLowerCase() === req.body.answer.toLowerCase() });
+  const userQuestionId = req.body.id;
+  const userAnswer = req.body.answer;
+  const correctAnswer = questions.find(question => question.id === userQuestionId).answer;
+
+  if (correctAnswer !== undefined) {
+    console.log("correctAnser "+correctAnswer)
+    res.send({ ...req.body, correct: correctAnswer.toLowerCase() === userAnswer.toLowerCase() });
+  } else {
+    res.status(500).send(req.body)
+  }
 });
 
 
@@ -37,6 +49,8 @@ console.log(req.body)
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
+
+
 
 app.listen(PORT, function () {
   console.log(`🌎 ==> API server now on port ${PORT}!`);

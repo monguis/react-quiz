@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
-import OptionButton from "../OptionButton"
-import questions from "../questions.json"
+import OptionButton from "../OptionButton";
+import API from "../../utils/API.js";
 
 const Quiz = () => {
 
-    const [state, setState] = useState({
-        userAnswer: null,
-        currentQuestion: 0,
-        questionText: "",
-        options: []
-    })
 
-    const { userAnswer, currentQuestion, questionText, options } = state;
+    const [questions, setQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState({})
+
+    const { questionNumber, userAnswer } = currentQuestion
 
     const randomize = arr => {
         let newPos, temp;
@@ -27,58 +24,71 @@ const Quiz = () => {
 
     useEffect(() => {
 
-        var storedSchedule = JSON.parse(localStorage.getItem("Todaytodo"));
-        if (!storedSchedule) {
-            console.log("naas");
-            localStorage.setItem("Todaytodo", JSON.stringify("yass"));
-        } else {
-            console.log(storedSchedule);
-        }
+        API.getQuestionList().then(({ data }) => {
+            randomize(data);
+            setQuestions(data)
+            setCurrentQuestion({
+                ...data[0],
+                options: randomize(data[0].options),
+                questionNumber: 0,
+                userAnswer: null
+            })
+        })
 
-
-        randomize(questions);
     }, [])
 
     useEffect(() => {
-        loadCurrentQuestion();
-    }, [currentQuestion])
+        loadNextQuestion();
+    }, [questionNumber])
 
-    const loadCurrentQuestion = () => {
-        setState({
-            ...state,
-            questionText: questions[state.currentQuestion].question,
-            options: randomize(questions[state.currentQuestion].options)
-        })
+    const loadNextQuestion = () => {
+        if (questionNumber) {
+            setCurrentQuestion({
+                ...currentQuestion,
+                ...questions[questionNumber],
+                options: randomize(questions[questionNumber].options)
+            })
+        }
     }
+
+    
     const nextQuestionHandler = () => {
-        setState({
-            ...state,
-            currentQuestion: currentQuestion + 1
-        })
+        
+        API.postAnswer({
+            id: currentQuestion.id,
+            answer: userAnswer
+        }).then(({ data }) => console.log(data));
+
+        setCurrentQuestion({
+            ...currentQuestion,
+            questionNumber: questionNumber + 1,
+            userAnswer: null
+        });
     }
 
-    const handleAnswer = (answer) => {
-        console.log(answer)
-        setState({
-            ...state,
-            userAnswer:answer
+
+
+    const handleOptionClick = (answer) => {
+        setCurrentQuestion({
+            ...currentQuestion,
+            userAnswer: answer
         })
     }
 
     return (
-        questionText ?
+        currentQuestion.question ?
             <>
                 <Row>
-                    <h3>{questionText}</h3>
+                    <h3>{currentQuestion.question}</h3>
                 </Row>
                 <Row>
                     <Col md={6} xs={12}>
-                        <OptionButton handleClick={handleAnswer} text={options[0]} selected={options[0] === userAnswer} />
-                        <OptionButton handleClick={handleAnswer} text={options[1]} selected={options[1] === userAnswer}/>
+                        <OptionButton handleClick={handleOptionClick} text={currentQuestion.options[0]} selected={currentQuestion.options[0] === userAnswer} />
+                        <OptionButton handleClick={handleOptionClick} text={currentQuestion.options[1]} selected={currentQuestion.options[1] === userAnswer} />
                     </Col>
                     <Col md={6} xs={12}>
-                        <OptionButton handleClick={handleAnswer} text={options[2]} selected={options[2] === userAnswer}/>
-                        <OptionButton handleClick={handleAnswer} text={options[3]} selected={options[3] === userAnswer}/>
+                        <OptionButton handleClick={handleOptionClick} text={currentQuestion.options[2]} selected={currentQuestion.options[2] === userAnswer} />
+                        <OptionButton handleClick={handleOptionClick} text={currentQuestion.options[3]} selected={currentQuestion.options[3] === userAnswer} />
                     </Col>
                 </Row>
                 <Row><button onClick={nextQuestionHandler}>answer</button></Row>
@@ -88,7 +98,7 @@ const Quiz = () => {
     )
 }
 
-export default Quiz
+export default Quiz;
 
 
 // localStorage.setItem("Todaytodo", JSON.stringify(daySchedule));

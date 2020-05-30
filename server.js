@@ -12,28 +12,42 @@ if (process.env.NODE_ENV === "production") {
 // Send every request to the React app
 // Define any API routes before this runs
 
-app.use(express.json())
+app.use(express.json());
+
+
 
 app.get("/api/questions/", function (req, res) {
   const questionsList = Object.values(questions);
 
-  const noAnswer = questionsList.map(question => { 
-    delete question.answer; 
-    return question 
+  const noAnswerList = questionsList.map(question => {
+    delete question.answer;
+    return question
   });
 
-  res.send(noAnswer);
+  res.send(noAnswerList);
 });
+
+
 
 app.post("/api/answer/", function (req, res) {
-  const correctAnswer = questions.find(answer => answer.id === req.body.id).answer;
+  const userQuestionId = req.body.id;
+  const userAnswer = req.body.answer;
+  const correctAnswer = questions.find(question => question.id === userQuestionId);
 
-  res.send({ ...req.body, correct: correctAnswer.toLowerCase === req.body.answer.toLowerCase });
+  if (correctAnswer !== undefined) {
+    res.send({ ...req.body, correct: correctAnswer.toLowerCase() === userAnswer.toLowerCase() });
+  } else {
+    res.status(500).send(req.body)
+  }
 });
+
+
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
+
+
 
 app.listen(PORT, function () {
   console.log(`🌎 ==> API server now on port ${PORT}!`);

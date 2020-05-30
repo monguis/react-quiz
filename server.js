@@ -16,20 +16,23 @@ app.use(express.json())
 
 app.get("/api/questions/", function (req, res) {
   const questionsList = Object.values(questions);
-
+ 
   const noAnswer = questionsList.map(question => { 
     delete question.answer; 
     return question 
   });
-
   res.send(noAnswer);
 });
 
+
+
 app.post("/api/answer/", function (req, res) {
   const correctAnswer = questions.find(answer => answer.id === req.body.id).answer;
-
-  res.send({ ...req.body, correct: correctAnswer.toLowerCase === req.body.answer.toLowerCase });
+console.log(req.body)
+  res.send({ ...req.body, correct: correctAnswer.toLowerCase() === req.body.answer.toLowerCase() });
 });
+
+
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));

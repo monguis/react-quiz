@@ -53,7 +53,7 @@ const Quiz = () => {
 
     
     const nextQuestionHandler = () => {
-        
+
         API.postAnswer({
             id: currentQuestion.id,
             answer: userAnswer
@@ -91,7 +91,7 @@ const Quiz = () => {
                         <OptionButton handleClick={handleOptionClick} text={currentQuestion.options[3]} selected={currentQuestion.options[3] === userAnswer} />
                     </Col>
                 </Row>
-                <Row><button onClick={nextQuestionHandler}>answer</button></Row>
+                <Row><button disabled={userAnswer===null} onClick={nextQuestionHandler}>answer</button></Row>
             </>
             :
             <h3>{"Connection Lost :'("}</h3>

@@ -19,22 +19,25 @@ app.use(express.json());
 app.get("/api/questions/", function (req, res) {
   const questionsList = Object.values(questions);
 
-  const noAnswerList = questionsList.map(question => {
-    delete question.answer;
-    return question
-  });
-
-  res.send(noAnswerList);
+  const noAnswer = questionsList.map(item =>
+    ({
+      id: item.id,   
+      question: item.question,
+      options: item.options
+    }));
+  res.send(noAnswer);
 });
 
 
-
+ 
 app.post("/api/answer/", function (req, res) {
+console.log(req.body)
   const userQuestionId = req.body.id;
   const userAnswer = req.body.answer;
-  const correctAnswer = questions.find(question => question.id === userQuestionId);
+  const correctAnswer = questions.find(question => question.id === userQuestionId).answer;
 
   if (correctAnswer !== undefined) {
+    console.log("correctAnser "+correctAnswer)
     res.send({ ...req.body, correct: correctAnswer.toLowerCase() === userAnswer.toLowerCase() });
   } else {
     res.status(500).send(req.body)

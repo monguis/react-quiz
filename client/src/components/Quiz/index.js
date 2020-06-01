@@ -15,9 +15,9 @@ const Quiz = () => {
         userAnswer: null,
         score: 0,
         end: false
-    })
+    });
 
-    const { currentQuestionPosition, userAnswer } = currentSession
+    const { currentQuestionPosition, userAnswer } = currentSession;
 
 
     const randomize = arr => {
@@ -29,17 +29,17 @@ const Quiz = () => {
             arr[newPos] = temp;
         }
         return arr;
-    }
+    };
 
     useEffect(() => {
 
-        var storedProgress = JSON.parse(localStorage.getItem("QuizProgress")) || null;
+        const storedProgress = JSON.parse(localStorage.getItem("QuizProgress")) || null;
 
         if (storedProgress) {
-
             setQuestions(storedProgress.questions);
-            let questionToSet = storedProgress.questions[storedProgress.currentQuestionPosition]
-            console.log(questionToSet)
+            console.log(storedProgress)
+            let questionToSet = storedProgress.questions[storedProgress.currentQuestionPosition];
+            console.log(questions)
             setCurrentSession({
                 ...questionToSet,
                 options: randomize(questionToSet.options),
@@ -67,13 +67,21 @@ const Quiz = () => {
                 })
             })
         }
-    }, [])
+
+    }, []);
 
 
 
     useEffect(() => {
-        loadNextQuestion();
-        saveProgress();
+        
+        console.log(currentQuestionPosition)
+        console.log(questions.length)
+        if (currentSession.end) {
+            localStorage.clear()
+        } else {
+            loadNextQuestion();
+            saveProgress();
+        }
     }, [currentQuestionPosition])
 
 
@@ -90,11 +98,14 @@ const Quiz = () => {
     }
 
     const saveProgress = () => {
-        localStorage.setItem("QuizProgress", JSON.stringify({
-            questions: questions,
-            score: currentSession.score,
-            currentQuestionPosition: currentQuestionPosition
-        }))
+
+        if (questions.length > 0) {
+            localStorage.setItem("QuizProgress", JSON.stringify({
+                questions: questions,
+                score: currentSession.score,
+                currentQuestionPosition: currentQuestionPosition
+            }))
+        }
     }
 
     const answerQuestionHandler = () => {
@@ -103,17 +114,19 @@ const Quiz = () => {
             answer: userAnswer
         }).then(({ data }) => {
             const addPoints = data.correct ? 20 : 0;
-            setCurrentSession({
-                ...currentSession,
-                currentQuestionPosition: currentQuestionPosition + 1,
-                score: currentSession.score + addPoints,
-                userAnswer: null
-            });
+
+                setCurrentSession({
+                    ...currentSession,
+                    currentQuestionPosition: currentQuestionPosition + 1,
+                    score: currentSession.score + addPoints,
+                    userAnswer: null,
+                    end: currentQuestionPosition + 1 === questions.length
+                });
+            
+
         }).catch((err) => {
             console.log(err)
         })
-
-
     }
 
 
@@ -126,7 +139,10 @@ const Quiz = () => {
     }
 
     return (
-        currentSession.question ?
+        currentSession.end ? <>
+            <h1>{currentSession.score}</h1>
+        </>
+            :
             <>
                 <Row>
                     <h3>{currentSession.question}</h3>
@@ -143,8 +159,7 @@ const Quiz = () => {
                 </Row>
                 <Row><button disabled={!userAnswer} onClick={answerQuestionHandler}>answer</button></Row>
             </>
-            :
-            <h3>{"Connection Lost :'("}</h3>
+
     )
 }
 

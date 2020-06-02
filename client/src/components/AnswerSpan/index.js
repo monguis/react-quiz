@@ -7,14 +7,13 @@ function AnswerSpan(props) {
     const { onCloseProp, source, show } = props;
 
     return (
-        <Toast
+        <Toast style={{maxWidth: "100%", backgroundColor: "transparent" }}
             onClose={() => { onCloseProp() }}
             show={show}
             delay={700}
-            autohide
-            style={{ backgroundColor: "transparent" }}>
-            <img
-                style={{ maxHeight: "20vh", maxWidth: "100%" }}
+            autohide>
+            <img style={{ maxWidth: "100%", maxHeight: "20vh", backgroundColor: "transparent" }}
+
                 src={source} />
         </Toast>
 

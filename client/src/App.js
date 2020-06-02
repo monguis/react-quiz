@@ -1,17 +1,20 @@
 import React, { Component } from "react";
-import { Container, Row } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import "./App.css";
 import Quiz from "./components/Quiz"
 
 class App extends Component {
   render() {
     return (
+
       <div className="App">
         <Container fluid>
           <Row>
-            <h1>
-              Game Title
-            </h1>
+            <Col>
+              <h1>
+                DWD quiz Game!
+              </h1>
+            </Col>
           </Row>
           <Quiz />
 

@@ -2,14 +2,23 @@ import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import OptionButton from "../OptionButton";
 import API from "../../utils/API.js";
-
+import "./assets/styles.css";
 const Quiz = () => {
 
 
     const [questions, setQuestions] = useState([]);
-    const [currentQuestion, setCurrentQuestion] = useState({})
+    const [currentSession, setCurrentSession] = useState({
+        id: 0,
+        question: "",
+        options: [],
+        currentQuestionPosition: 0,
+        userAnswer: null,
+        score: 0,
+        end: false
+    });
 
-    const { questionNumber, userAnswer } = currentQuestion
+    const { currentQuestionPosition, userAnswer } = currentSession;
+
 
     const randomize = arr => {
         let newPos, temp;
@@ -20,97 +29,146 @@ const Quiz = () => {
             arr[newPos] = temp;
         }
         return arr;
-    }
+    };
 
     useEffect(() => {
 
-        API.getQuestionList().then(({ data }) => {
-            randomize(data);
-            setQuestions(data)
-            setCurrentQuestion({
-                ...data[0],
-                options: randomize(data[0].options),
-                questionNumber: 0,
-                userAnswer: null
+        const storedProgress = JSON.parse(localStorage.getItem("QuizProgress")) || null;
+
+        if (storedProgress) {
+            setQuestions(storedProgress.questions);
+
+            let questionToSet = storedProgress.questions[storedProgress.currentQuestionPosition];
+
+            setCurrentSession({
+                ...questionToSet,
+                options: randomize(questionToSet.options),
+                currentQuestionPosition: storedProgress.currentQuestionPosition,
+                userAnswer: null,
+                score: storedProgress.score
             })
-        })
+        } else {
 
-    }, [])
+            API.getQuestionList().then(({ data }) => {
+                randomize(data);
+                setQuestions(data)
+                localStorage.setItem("QuizProgress", JSON.stringify({
+                    questions: data,
+                    score: 0,
+                    currentQuestionPosition: 0
+                }));
+
+                setCurrentSession({
+                    ...data[0],
+                    options: randomize(data[0].options),
+                    currentQuestionPosition: 0,
+                    userAnswer: null,
+                    score: 0
+                })
+            })
+        }
+
+    }, []);
+
+
 
     useEffect(() => {
-        loadNextQuestion();
-    }, [questionNumber])
+
+        if (currentSession.end) {
+            localStorage.clear()
+
+        } else {
+            loadNextQuestion();
+            saveProgress();
+        }
+    }, [currentQuestionPosition])
+
+
 
     const loadNextQuestion = () => {
-        if (questionNumber) {
-            setCurrentQuestion({
-                ...currentQuestion,
-                ...questions[questionNumber],
-                options: randomize(questions[questionNumber].options)
+        if (currentQuestionPosition) {
+            const questionToSet = questions[currentQuestionPosition]
+            setCurrentSession({
+                ...currentSession,
+                ...questionToSet,
+                options: randomize(questionToSet.options)
             })
+
         }
     }
 
-    
-    const nextQuestionHandler = () => {
+    const saveProgress = () => {
 
+        if (questions.length > 0) {
+            localStorage.setItem("QuizProgress", JSON.stringify({
+                questions: questions,
+                score: currentSession.score,
+                currentQuestionPosition: currentQuestionPosition
+            }))
+        }
+    }
+
+    const answerQuestionHandler = () => {
         API.postAnswer({
-            id: currentQuestion.id,
+            id: currentSession.id,
             answer: userAnswer
-        }).then(({ data }) => console.log(data));
+        }).then(({ data }) => {
+            const addPoints = data.correct ? 20 : 0;
 
-        setCurrentQuestion({
-            ...currentQuestion,
-            questionNumber: questionNumber + 1,
-            userAnswer: null
-        });
+            setCurrentSession({
+                ...currentSession,
+                currentQuestionPosition: currentQuestionPosition + 1,
+                score: currentSession.score + addPoints,
+                userAnswer: null,
+                end: currentQuestionPosition + 1 === questions.length
+            });
+
+
+        }).catch((err) => {
+            console.log(err)
+        })
     }
 
 
 
     const handleOptionClick = (answer) => {
-        setCurrentQuestion({
-            ...currentQuestion,
+        setCurrentSession({
+            ...currentSession,
             userAnswer: answer
         })
     }
 
     return (
-        currentQuestion.question ?
+        currentSession.end ? <>
+            <h1>{"Your Score is " + currentSession.score}</h1>
+        </>
+            :
             <>
                 <Row>
-                    <h3>{currentQuestion.question}</h3>
+                    <Col>
+
+                        <h3>{currentSession.question}</h3>
+
+
+                    </Col>
                 </Row>
                 <Row>
                     <Col md={6} xs={12}>
-                        <OptionButton handleClick={handleOptionClick} text={currentQuestion.options[0]} selected={currentQuestion.options[0] === userAnswer} />
-                        <OptionButton handleClick={handleOptionClick} text={currentQuestion.options[1]} selected={currentQuestion.options[1] === userAnswer} />
+                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[0]} selected={currentSession.options[0] === userAnswer} />
+                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[1]} selected={currentSession.options[1] === userAnswer} />
                     </Col>
                     <Col md={6} xs={12}>
-                        <OptionButton handleClick={handleOptionClick} text={currentQuestion.options[2]} selected={currentQuestion.options[2] === userAnswer} />
-                        <OptionButton handleClick={handleOptionClick} text={currentQuestion.options[3]} selected={currentQuestion.options[3] === userAnswer} />
+                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[2]} selected={currentSession.options[2] === userAnswer} />
+                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[3]} selected={currentSession.options[3] === userAnswer} />
                     </Col>
                 </Row>
-                <Row><button disabled={userAnswer===null} onClick={nextQuestionHandler}>answer</button></Row>
+
+                <button disabled={!userAnswer} onClick={answerQuestionHandler}>answer</button>
+
+                <button >answer</button>
+
             </>
-            :
-            <h3>{"Connection Lost :'("}</h3>
     )
 }
 
 export default Quiz;
-
-
-// localStorage.setItem("Todaytodo", JSON.stringify(daySchedule));
-
-// var storedSchedule = JSON.parse(localStorage.getItem("Todaytodo"));
-// if (storedSchedule) {
-//     if (storedSchedule.date !== currentdate.getDay() + "/" + currentdate.getMonth()) {
-//       localStorage.clear();
-//       localStorage.setItem("Todaytodo", JSON.stringify(daySchedule));
-//     } else {
-//       daySchedule = storedSchedule;
-//     }
-//   } else {
-//     localStorage.setItem("Todaytodo", JSON.stringify(daySchedule));
-//   }

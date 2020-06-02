@@ -153,14 +153,14 @@ const Quiz = () => {
         </>
             :
             <>
-                <Row>
+                <Row style={{height:"12.5vw"}} >
                     <Col>
 
-                        <h3>{currentSession.question}</h3>
+                        <h3 style={{fontSize:"3.5vw"}}>{currentSession.question}</h3>
 
                     </Col>
                 </Row>
-                <Row>
+                <Row >
                     <Col md={6} xs={12}>
                         <OptionButton handleClick={handleOptionClick} text={currentSession.options[0]} selected={currentSession.options[0] === userAnswer} />
                         <OptionButton handleClick={handleOptionClick} text={currentSession.options[1]} selected={currentSession.options[1] === userAnswer} />

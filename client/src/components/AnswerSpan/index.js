@@ -13,7 +13,7 @@ function AnswerSpan(props) {
             delay={700}
             autohide>
             <img style={{ maxWidth: "100%", maxHeight: "20vh", backgroundColor: "transparent" }}
-
+                alt=""
                 src={source} />
         </Toast>
 

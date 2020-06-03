@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Toast } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import OptionButton from "../OptionButton";
 import API from "../../utils/API.js";
 import "./assets/styles.css";
 import incorrectSpan from "./assets/images/incorrect.png";
 import correctSpan from "./assets/images/correct.png";
 import AnswerSpan from "../AnswerSpan/"
+import AnswerButton from "../AnswerButton"
 
 const Quiz = () => {
 
@@ -38,6 +39,32 @@ const Quiz = () => {
 
     useEffect(() => {
 
+        function wait(label) {
+            return new Promise(resolve => {
+                setTimeout(resolve(label), 1000);
+            });
+        }
+
+        function a() {
+            const list = [wait("First"), wait("Second")];
+            console.log("Started Function");
+
+
+            list.forEach(async function (x) {
+                console.log("Started");
+                console.log(await x);
+                console.log("Finished");
+
+            });
+            console.log("Finished function");
+
+
+        }
+
+
+        a();
+
+
         const storedProgress = JSON.parse(localStorage.getItem("QuizProgress")) || null;
 
         if (storedProgress) {
@@ -53,7 +80,6 @@ const Quiz = () => {
                 score: storedProgress.score
             })
         } else {
-
             API.getQuestionList().then(({ data }) => {
                 randomize(data);
                 setQuestions(data)
@@ -72,7 +98,6 @@ const Quiz = () => {
                 })
             })
         }
-
     }, []);
 
 
@@ -153,10 +178,10 @@ const Quiz = () => {
         </>
             :
             <>
-                <Row style={{height:"12.5vw"}} >
+                <Row style={{ height: "12.5vw" }} >
                     <Col>
 
-                        <h3 style={{fontSize:"3.5vw"}}>{currentSession.question}</h3>
+                        <h3 style={{ fontSize: "3.5vw" }}>{currentSession.question}</h3>
 
                     </Col>
                 </Row>
@@ -171,15 +196,16 @@ const Quiz = () => {
                     </Col>
                 </Row>
                 <Row style={{ height: "13vh" }}>
-                    <Col xs={{ order: 1 }} xs={12} md={{ order: 12 }}>
-                        <button disabled={!userAnswer} onClick={answerQuestionHandler}>answer</button>
+                    <Col style={{ height: "13vh" }} xs={{ order: 1 }} xs={12} md={{ order: 12 }}>
+                        <AnswerButton disabled={!userAnswer} onClick={answerQuestionHandler}>Answer</AnswerButton>
                     </Col>
-                    <Col xs={{ order: 12 }} xs={12} md={{ order: 1 }}>
-                        <AnswerSpan show={displaySpan} onCloseProp={closeSpanHandler} source={spanSource} /> 
+                    <Col style={{ height: "13vh" }} xs={{ order: 12 }} xs={12} md={{ order: 1 }}>
+                        <AnswerSpan show={displaySpan} onCloseProp={closeSpanHandler} source={spanSource} />
                     </Col>
 
 
                 </Row>
+
             </>
     )
 }

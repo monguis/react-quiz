@@ -5,8 +5,9 @@ import API from "../../utils/API.js";
 import "./assets/styles.css";
 import incorrectSpan from "./assets/images/incorrect.png";
 import correctSpan from "./assets/images/correct.png";
-import AnswerSpan from "../AnswerSpan/"
-import AnswerButton from "../AnswerButton"
+import AnswerSpan from "../AnswerSpan/";
+import AnswerButton from "../AnswerButton";
+import {Link} from "react-router-dom"
 
 const Quiz = () => {
 
@@ -38,65 +39,11 @@ const Quiz = () => {
     };
 
     useEffect(() => {
-
-        function wait(label) {
-            return new Promise(resolve => {
-                setTimeout(resolve(label), 1000);
-            });
-        }
-
-        function a() {
-            const list = [wait("First"), wait("Second")];
-            console.log("Started Function");
-
-
-            list.forEach(async function (x) {
-                console.log("Started");
-                console.log(await x);
-                console.log("Finished");
-
-            });
-            console.log("Finished function");
-
-
-        }
-
-
-        a();
-
-
         const storedProgress = JSON.parse(localStorage.getItem("QuizProgress")) || null;
-
         if (storedProgress) {
-            setQuestions(storedProgress.questions);
-
-            let questionToSet = storedProgress.questions[storedProgress.currentQuestionPosition];
-
-            setCurrentSession({
-                ...questionToSet,
-                options: randomize(questionToSet.options),
-                currentQuestionPosition: storedProgress.currentQuestionPosition,
-                userAnswer: null,
-                score: storedProgress.score
-            })
+            loadSession(storedProgress)
         } else {
-            API.getQuestionList().then(({ data }) => {
-                randomize(data);
-                setQuestions(data)
-                localStorage.setItem("QuizProgress", JSON.stringify({
-                    questions: data,
-                    score: 0,
-                    currentQuestionPosition: 0
-                }));
-
-                setCurrentSession({
-                    ...data[0],
-                    options: randomize(data[0].options),
-                    currentQuestionPosition: 0,
-                    userAnswer: null,
-                    score: 0
-                })
-            })
+            createNewSession()
         }
     }, []);
 
@@ -105,7 +52,6 @@ const Quiz = () => {
 
         if (currentSession.end) {
             localStorage.clear()
-
         } else {
             loadNextQuestion();
             saveProgress();
@@ -132,6 +78,40 @@ const Quiz = () => {
                 currentQuestionPosition: currentQuestionPosition
             }))
         }
+    }
+
+    const createNewSession = () => {
+        API.getQuestionList().then(({ data }) => {
+            randomize(data);
+            setQuestions(data)
+            localStorage.setItem("QuizProgress", JSON.stringify({
+                questions: data,
+                score: 0,
+                currentQuestionPosition: 0
+            }));
+
+            setCurrentSession({
+                ...data[0],
+                options: randomize(data[0].options),
+                currentQuestionPosition: 0,
+                userAnswer: null,
+                score: 0
+            })
+        })
+    }
+
+    const loadSession = (storedProgress) => {
+        setQuestions(storedProgress.questions);
+
+        let questionToSet = storedProgress.questions[storedProgress.currentQuestionPosition];
+
+        setCurrentSession({
+            ...questionToSet,
+            options: randomize(questionToSet.options),
+            currentQuestionPosition: storedProgress.currentQuestionPosition,
+            userAnswer: null,
+            score: storedProgress.score
+        })
     }
 
     const answerQuestionHandler = () => {
@@ -175,6 +155,8 @@ const Quiz = () => {
     return (
         currentSession.end ? <>
             <h1>{"Your Score is " + currentSession.score}</h1>
+            <button onClick={() => { createNewSession() }}>again</button>
+            <button><Link to="/home">go jom</Link></button> 
         </>
             :
             <>
@@ -187,12 +169,12 @@ const Quiz = () => {
                 </Row>
                 <Row >
                     <Col md={6} xs={12}>
-                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[0]} selected={currentSession.options[0] === userAnswer} />
-                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[1]} selected={currentSession.options[1] === userAnswer} />
+                        <OptionButton handleClick={() => { handleOptionClick(currentSession.options[0]) }} text={currentSession.options[0]} selected={currentSession.options[0] === userAnswer} />
+                        <OptionButton handleClick={() => { handleOptionClick(currentSession.options[1]) }} text={currentSession.options[1]} selected={currentSession.options[1] === userAnswer} />
                     </Col>
                     <Col md={6} xs={12}>
-                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[2]} selected={currentSession.options[2] === userAnswer} />
-                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[3]} selected={currentSession.options[3] === userAnswer} />
+                        <OptionButton handleClick={() => { handleOptionClick(currentSession.options[2]) }} text={currentSession.options[2]} selected={currentSession.options[2] === userAnswer} />
+                        <OptionButton handleClick={() => { handleOptionClick(currentSession.options[3]) }} text={currentSession.options[3]} selected={currentSession.options[3] === userAnswer} />
                     </Col>
                 </Row>
                 <Row style={{ height: "13vh" }}>

@@ -12,19 +12,33 @@ h1 {
   font-size: 4vh;
 }
 
-body, #root, .App {
-  position: absolute;
+.App {
+  position: relative;
   margin: 0px;
-  overflow: hidden;
   top: 0px;
   bottom: 0px;
   width: 100%;
   text-align: center;
-  background-color: #15203D;
 }
 
-.container {
-  max-height: 100vh;
+body{
+
+  background-color: black;
+}
+
+
+#backgroundDiv {
+  position: relative;
+  width: 100%;
+  background-color: black;
+  position: relative;
+}
+
+#backgroundDiv>img {
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
 }
 
 #titleDiv {
@@ -33,7 +47,14 @@ body, #root, .App {
   display: inline-block;
 }
 
-h3{
+h3 {
   font-family: 'Montserrat', sans-serif;
-  color: #91D8DF;
+  color: white;
+  font-size: 3.5vw;
+}
+
+h2 {
+  font-family: 'Montserrat', sans-serif;
+  color: white;
+  font-size: 4vw;
 }

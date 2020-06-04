@@ -1,0 +1,8 @@
+.answerButton {
+    font-family: 'Lato', sans-serif;
+    font-size: 2vh;
+    margin: 3.5vh auto;
+    width: 40%;
+    height: 40%;
+    border-radius: 10px;
+}

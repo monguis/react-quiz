@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Toast } from "react-bootstrap";
-import OptionButton from "../OptionButton";
+import { Row, Col } from "react-bootstrap";
+import OptionButton from "../../components/OptionButton";
 import API from "../../utils/API.js";
 import "./assets/styles.css";
 import incorrectSpan from "./assets/images/incorrect.png";
 import correctSpan from "./assets/images/correct.png";
-import AnswerSpan from "../AnswerSpan/"
+import AnswerSpan from "../../components/AnswerSpan/";
+import AnswerButton from "../../components/AnswerButton";
+import { Link } from "react-router-dom"
 
 const Quiz = () => {
 
@@ -37,55 +39,24 @@ const Quiz = () => {
     };
 
     useEffect(() => {
-
         const storedProgress = JSON.parse(localStorage.getItem("QuizProgress")) || null;
-
         if (storedProgress) {
-            setQuestions(storedProgress.questions);
-
-            let questionToSet = storedProgress.questions[storedProgress.currentQuestionPosition];
-
-            setCurrentSession({
-                ...questionToSet,
-                options: randomize(questionToSet.options),
-                currentQuestionPosition: storedProgress.currentQuestionPosition,
-                userAnswer: null,
-                score: storedProgress.score
-            })
+            loadSession(storedProgress)
         } else {
-
-            API.getQuestionList().then(({ data }) => {
-                randomize(data);
-                setQuestions(data)
-                localStorage.setItem("QuizProgress", JSON.stringify({
-                    questions: data,
-                    score: 0,
-                    currentQuestionPosition: 0
-                }));
-
-                setCurrentSession({
-                    ...data[0],
-                    options: randomize(data[0].options),
-                    currentQuestionPosition: 0,
-                    userAnswer: null,
-                    score: 0
-                })
-            })
+            createNewSession()
         }
-
     }, []);
 
 
     useEffect(() => {
-
         if (currentSession.end) {
             localStorage.clear()
-
         } else {
             loadNextQuestion();
             saveProgress();
         }
     }, [currentQuestionPosition]);
+
 
     const loadNextQuestion = () => {
         if (currentQuestionPosition) {
@@ -95,7 +66,6 @@ const Quiz = () => {
                 ...questionToSet,
                 options: randomize(questionToSet.options)
             })
-
         }
     }
 
@@ -107,6 +77,39 @@ const Quiz = () => {
                 currentQuestionPosition: currentQuestionPosition
             }))
         }
+    }
+
+    const createNewSession = () => {
+        API.getQuestionList().then(({ data }) => {
+            randomize(data);
+            setQuestions(data)
+            localStorage.setItem("QuizProgress", JSON.stringify({
+                questions: data,
+                score: 0,
+                currentQuestionPosition: 0
+            }));
+            setCurrentSession({
+                ...data[0],
+                options: randomize(data[0].options),
+                currentQuestionPosition: 0,
+                userAnswer: null,
+                score: 0
+            })
+        })
+    }
+
+    const loadSession = (storedProgress) => {
+        setQuestions(storedProgress.questions);
+
+        let questionToSet = storedProgress.questions[storedProgress.currentQuestionPosition];
+
+        setCurrentSession({
+            ...questionToSet,
+            options: randomize(questionToSet.options),
+            currentQuestionPosition: storedProgress.currentQuestionPosition,
+            userAnswer: null,
+            score: storedProgress.score
+        })
     }
 
     const answerQuestionHandler = () => {
@@ -124,13 +127,10 @@ const Quiz = () => {
                 spanSource: data.correct ? correctSpan : incorrectSpan,
                 displaySpan: true
             });
-
         }).catch((err) => {
             console.log(err)
         })
     }
-
-
 
     const handleOptionClick = (answer) => {
         setCurrentSession({
@@ -146,42 +146,51 @@ const Quiz = () => {
         })
     }
 
+    const renderOptionButtons = (array) => {
+        const halfIndex = Math.ceil(array.length / 2);
+        const toRenderArray = [array.slice(0, halfIndex), array.slice(halfIndex)];
+        return (
+            toRenderArray.map((column, ColIndex) =>
+                < Col key={"column-" + ColIndex} md={6} xs={12} >
+                    {
+                        column.map((option, optionIndex) =>
+                            <OptionButton key={"option-" + optionIndex} handleClick={() => { handleOptionClick(option) }} text={option} selected={option === userAnswer} />)
+                    }
+                </Col >
+            )
+        );
+    }
 
     return (
         currentSession.end ? <>
             <h1>{"Your Score is " + currentSession.score}</h1>
+            <button onClick={() => { createNewSession() }}>again</button>
+            <Link to="/home"><button>go jom</button> </Link>
         </>
             :
             <>
-                <Row style={{height:"12.5vw"}} >
+                <Row style={{ height: "12.5vw" }} >
                     <Col>
-
-                        <h3 style={{fontSize:"3.5vw"}}>{currentSession.question}</h3>
-
+                        <h3 >{currentSession.question}</h3>
                     </Col>
+                </Row>
+                <Row>
+                    {renderOptionButtons(currentSession.options)}
                 </Row>
                 <Row >
-                    <Col md={6} xs={12}>
-                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[0]} selected={currentSession.options[0] === userAnswer} />
-                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[1]} selected={currentSession.options[1] === userAnswer} />
+                    <Col style={{ height: "13vh" }} xs={{ order: 1 }} xs={12} md={{ order: 12 }}>
+                        <AnswerButton disabled={!userAnswer} onClick={answerQuestionHandler}>Answer</AnswerButton>
                     </Col>
-                    <Col md={6} xs={12}>
-                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[2]} selected={currentSession.options[2] === userAnswer} />
-                        <OptionButton handleClick={handleOptionClick} text={currentSession.options[3]} selected={currentSession.options[3] === userAnswer} />
-                    </Col>
-                </Row>
-                <Row style={{ height: "13vh" }}>
-                    <Col xs={{ order: 1 }} xs={12} md={{ order: 12 }}>
-                        <button disabled={!userAnswer} onClick={answerQuestionHandler}>answer</button>
-                    </Col>
-                    <Col xs={{ order: 12 }} xs={12} md={{ order: 1 }}>
-                        <AnswerSpan show={displaySpan} onCloseProp={closeSpanHandler} source={spanSource} /> 
+                    <Col style={{ height: "13vh" }} xs={{ order: 12 }} xs={12} md={{ order: 1 }}>
+                        <AnswerSpan show={displaySpan} onCloseProp={closeSpanHandler} source={spanSource} />
                     </Col>
 
 
                 </Row>
+
             </>
     )
 }
 
 export default Quiz;
+

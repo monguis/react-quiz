@@ -1,0 +1,14 @@
+.startButton {
+    background-image: linear-gradient(to bottom right, #4A618B, #7ABFDB, #CCF4FE);
+    padding: 3vh;
+    width:80%;
+    border-radius: 4vh;
+    transition: all,0.5s;
+    font-size: 2vh;
+    margin:2vw auto;
+    color:darkblue;
+}
+
+.startButton:hover{
+    box-shadow: 0 0 20px grey;
+}

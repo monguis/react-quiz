@@ -7,7 +7,7 @@ import incorrectSpan from "./assets/images/incorrect.png";
 import correctSpan from "./assets/images/correct.png";
 import AnswerSpan from "../AnswerSpan/";
 import AnswerButton from "../AnswerButton";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 
 const Quiz = () => {
 
@@ -21,7 +21,8 @@ const Quiz = () => {
         userAnswer: null,
         score: 0,
         end: false,
-        spanSource: null
+        spanSource: null,
+        displaySpan: false
     });
 
     const { currentQuestionPosition, userAnswer, spanSource, displaySpan } = currentSession;
@@ -49,7 +50,6 @@ const Quiz = () => {
 
 
     useEffect(() => {
-
         if (currentSession.end) {
             localStorage.clear()
         } else {
@@ -57,6 +57,7 @@ const Quiz = () => {
             saveProgress();
         }
     }, [currentQuestionPosition]);
+
 
     const loadNextQuestion = () => {
         if (currentQuestionPosition) {
@@ -66,7 +67,6 @@ const Quiz = () => {
                 ...questionToSet,
                 options: randomize(questionToSet.options)
             })
-
         }
     }
 
@@ -89,7 +89,6 @@ const Quiz = () => {
                 score: 0,
                 currentQuestionPosition: 0
             }));
-
             setCurrentSession({
                 ...data[0],
                 options: randomize(data[0].options),
@@ -129,13 +128,10 @@ const Quiz = () => {
                 spanSource: data.correct ? correctSpan : incorrectSpan,
                 displaySpan: true
             });
-
         }).catch((err) => {
             console.log(err)
         })
     }
-
-
 
     const handleOptionClick = (answer) => {
         setCurrentSession({
@@ -151,45 +147,51 @@ const Quiz = () => {
         })
     }
 
+    const renderOptionButtons = (array) => {
+        const halfIndex = Math.ceil(array.length / 2);
+        const toRenderArray = [array.slice(0, halfIndex), array.slice(halfIndex)];
+        return (
+            toRenderArray.map((column, ColIndex) =>
+                < Col key = { "column-"+ColIndex } md = { 6} xs = { 12} >
+                {
+                    column.map((option, optionIndex) =>
+                        <OptionButton key={"option-" + optionIndex} handleClick={() => { handleOptionClick(option) }} text={option} selected={option === userAnswer} />)
+                }
+                </Col >
+            )
+        );
+    }
 
-    return (
-        currentSession.end ? <>
-            <h1>{"Your Score is " + currentSession.score}</h1>
-            <button onClick={() => { createNewSession() }}>again</button>
-            <button><Link to="/home">go jom</Link></button> 
+return (
+    currentSession.end ? <>
+        <h1>{"Your Score is " + currentSession.score}</h1>
+        <button onClick={() => { createNewSession() }}>again</button>
+        <Link to="/home"><button>go jom</button> </Link>
+    </>
+        :
+        <>
+            <Row style={{ height: "12.5vw" }} >
+                <Col>
+                    <h3 style={{ fontSize: "3.5vw" }}>{currentSession.question}</h3>
+                </Col>
+            </Row>
+            <Row>
+                {renderOptionButtons(currentSession.options)}
+            </Row>
+            <Row >
+                <Col style={{ height: "13vh" }} xs={{ order: 1 }} xs={12} md={{ order: 12 }}>
+                    <AnswerButton disabled={!userAnswer} onClick={answerQuestionHandler}>Answer</AnswerButton>
+                </Col>
+                <Col style={{ height: "13vh" }} xs={{ order: 12 }} xs={12} md={{ order: 1 }}>
+                    <AnswerSpan show={displaySpan} onCloseProp={closeSpanHandler} source={spanSource} />
+                </Col>
+
+
+            </Row>
+
         </>
-            :
-            <>
-                <Row style={{ height: "12.5vw" }} >
-                    <Col>
-
-                        <h3 style={{ fontSize: "3.5vw" }}>{currentSession.question}</h3>
-
-                    </Col>
-                </Row>
-                <Row >
-                    <Col md={6} xs={12}>
-                        <OptionButton handleClick={() => { handleOptionClick(currentSession.options[0]) }} text={currentSession.options[0]} selected={currentSession.options[0] === userAnswer} />
-                        <OptionButton handleClick={() => { handleOptionClick(currentSession.options[1]) }} text={currentSession.options[1]} selected={currentSession.options[1] === userAnswer} />
-                    </Col>
-                    <Col md={6} xs={12}>
-                        <OptionButton handleClick={() => { handleOptionClick(currentSession.options[2]) }} text={currentSession.options[2]} selected={currentSession.options[2] === userAnswer} />
-                        <OptionButton handleClick={() => { handleOptionClick(currentSession.options[3]) }} text={currentSession.options[3]} selected={currentSession.options[3] === userAnswer} />
-                    </Col>
-                </Row>
-                <Row style={{ height: "13vh" }}>
-                    <Col style={{ height: "13vh" }} xs={{ order: 1 }} xs={12} md={{ order: 12 }}>
-                        <AnswerButton disabled={!userAnswer} onClick={answerQuestionHandler}>Answer</AnswerButton>
-                    </Col>
-                    <Col style={{ height: "13vh" }} xs={{ order: 12 }} xs={12} md={{ order: 1 }}>
-                        <AnswerSpan show={displaySpan} onCloseProp={closeSpanHandler} source={spanSource} />
-                    </Col>
-
-
-                </Row>
-
-            </>
-    )
+)
 }
 
 export default Quiz;
+

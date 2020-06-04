@@ -5,11 +5,10 @@ import OptionButton from "../OptionButton";
 
 const Home = () => {
 
-    const [storedProgress, setStoreProgress] = useState({});
+    const [storedProgress, setStoreProgress] = useState(null);
 
     useEffect(() => {
-        setStoreProgress(JSON.parse(localStorage.getItem("QuizProgress")))
-        console.log(storedProgress)
+        setStoreProgress(JSON.parse(localStorage.getItem("QuizProgress"))||null)
     }, [])
     return (<>
 
@@ -19,15 +18,12 @@ const Home = () => {
             </Col>
         </Row>
         {storedProgress ? <>
-            <h3 >We loaded your data successfully, Continue?</h3>
+            <h3>We loaded your data successfully, Continue?</h3>
             <Row>
                 <Col xs={6}>
                     <Link to="/quiz">
-                        <OptionButton handleClick={console.log()} text={"Continue"} />
+                        <OptionButton text={"Continue"} />
                     </Link>
-                </Col>
-                <Col xs={6}>
-                    <OptionButton handleClick={()=>{}} text={"start over"} />
                 </Col>
             </Row>
 

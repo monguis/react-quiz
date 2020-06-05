@@ -7,12 +7,14 @@ import Home from "./pages/Home";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
 class App extends Component {
+  //the App component is our main app structure, where we declare the way our site is organized. 
+  // It also includes routes to access different location inside our site.
   render() {
     return (
 
       <div className="App">
         <Router>
-
+{/* This header will be present through out our app, it has the app title and a home button to go back. */}
           <header className="d-flex align-items-center">
             <Container fluid>
               <Row>
@@ -30,8 +32,8 @@ class App extends Component {
                 </Col>
               </Row>
             </Container>
-
           </header>
+{/* We create another container which renders our multiple site locations, we also define our routes to easy redirection*/}
           <Container fluid >
             <Switch>
 

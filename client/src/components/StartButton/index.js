@@ -6,7 +6,10 @@ const StartButton = (props) => {
     const { children } = props
 
     return (
-        <button onClick={props.onClick ? (() => props.onClick()): null} class="startButton">{children}</button>
+        <button 
+        onClick={props.onClick ? (() => props.onClick()): null} 
+        class="startButton">
+            <div className="childrenContainer">{children}</div></button>
     )
 }
 

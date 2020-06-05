@@ -7,7 +7,8 @@ import incorrectSpan from "./assets/images/incorrect.png";
 import correctSpan from "./assets/images/correct.png";
 import AnswerSpan from "../../components/AnswerSpan/";
 import AnswerButton from "../../components/AnswerButton";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import StartButton from "../../components/StartButton";
 
 const Quiz = () => {
 
@@ -162,11 +163,28 @@ const Quiz = () => {
     }
 
     return (
-        currentSession.end ? <>
-            <h1>{"Your Score is " + currentSession.score}</h1>
-            <button onClick={() => { createNewSession() }}>again</button>
-            <Link to="/home"><button>go jom</button> </Link>
-        </>
+        currentSession.end ?
+            <>
+                <Row>
+                    <Col>
+                    <h1>{`Finished! You Scored ${currentSession.score}`}</h1>
+                    <h1>Think you can do better?</h1>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12}>
+                        <StartButton onClick={() => { createNewSession() }}>
+                            Play Again
+                    </StartButton>
+                        <Link to="/home">
+                            <StartButton>
+                                Home
+                    </StartButton>
+                        </Link>
+                    </Col>
+                </Row>
+
+            </>
             :
             <>
                 <Row style={{ height: "12.5vw" }} >
@@ -186,7 +204,9 @@ const Quiz = () => {
                     </Col>
 
 
+
                 </Row>
+                
 
             </>
     )

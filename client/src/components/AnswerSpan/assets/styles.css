@@ -1,0 +1,12 @@
+.spanImg {
+    max-width: 100%;
+    height: 14vh;
+    background-color: transparent;
+}
+
+.spanWrapper {
+    max-width: 100%;
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+}

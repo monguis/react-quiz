@@ -14,13 +14,13 @@ class App extends Component {
 
       <div className="App">
         <Router>
-{/* This header will be present through out our app, it has the app title and a home button to go back. */}
+          {/* This header will be present through out our app, it has the app title and a home button to go back. */}
           <header className="d-flex align-items-center">
             <Container fluid>
               <Row>
                 <Col xs={6} className="d-flex justify-content-start align-items-center">
                   <h1 id="headerText">
-                    <img alt="DWD" src="https://d19y2ttatozxjp.cloudfront.net/assets/mobile/DWDwordmark_120W.png" /> Quiz Game!
+                    Quiz Game!
               </h1>
                 </Col>
                 <Col xs={6} className="d-flex flex-row-reverse align-items-center">
@@ -33,7 +33,7 @@ class App extends Component {
               </Row>
             </Container>
           </header>
-{/* We create another container which renders our multiple site locations, we also define our routes to easy redirection*/}
+          {/* We create another container which renders our multiple site locations, we also define our routes to easy redirection*/}
           <Container fluid >
             <Switch>
 
